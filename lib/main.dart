@@ -32,36 +32,70 @@ class ConsultaFicha extends StatefulWidget {
 
 class _ConsultaFichaState extends State<ConsultaFicha> {
   TextEditingController _dataInicial = TextEditingController();
-  
+  TextEditingController _dataFinal = TextEditingController();
+
+  Widget _buildDataInicial() {
+    return TextField(
+      controller: _dataInicial,
+      decoration: const InputDecoration(
+          icon: Icon(Icons.calendar_today_rounded), labelText: "Mês inicial"),
+      onTap: () async {
+        DateTime? escolhaData = await showDatePicker(
+            context: context,
+            initialDate: DateTime.now(),
+            firstDate: DateTime(2000),
+            lastDate: DateTime(2101));
+
+        if (escolhaData != null) {
+          setState(() {
+            _dataInicial.text = DateFormat('yyyy-MM-dd').format(escolhaData);
+          });
+        }
+      },
+    );
+  }
+
+  Widget _buildDataFinal() {
+    return TextField(
+      controller: _dataFinal,
+      decoration: const InputDecoration(
+          icon: Icon(Icons.calendar_today_rounded), labelText: "Mês Final"),
+      onTap: () async {
+        DateTime? escolhaData = await showDatePicker(
+            context: context,
+            initialDate: DateTime.now(),
+            firstDate: DateTime(2000),
+            lastDate: DateTime(2101));
+
+        if (escolhaData != null) {
+          setState(() {
+            _dataFinal.text = DateFormat('yyyy-MM-dd').format(escolhaData);
+          });
+        }
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(30.0),
-        child: TextField (
-          controller: _dataInicial,
-          decoration: const InputDecoration(
-            icon: Icon(Icons.calendar_today_rounded),
-            labelText: "Mês inicial"
+        appBar: AppBar(title: Text(widget.title)),
+        body: Container(
+          margin: EdgeInsets.all(24),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              _buildDataInicial(), 
+              _buildDataFinal(),
+              SizedBox(height: 40),
+              ElevatedButton(
+                child: Text('Gerar PDF'),
+                onPressed: () {
+                  print(_dataFinal.text);
+                },
+              )
+            ],
           ),
-          onTap: () async {
-            DateTime? escolhaData = await showDatePicker(
-              context: context, 
-              initialDate: DateTime.now(), 
-              firstDate: DateTime(2000), 
-              lastDate: DateTime(2101));
-
-              if(escolhaData != null) {
-                setState(() {
-                  _dataInicial.text = DateFormat('yyyy-MM-dd').format(escolhaData);
-                });
-              }
-          },
-        ),
-      )
-    );
+        ));
   }
 }
